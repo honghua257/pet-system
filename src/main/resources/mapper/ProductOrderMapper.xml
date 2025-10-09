@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.platform.mapper.ProductOrderMapper">
+    <!-- 分页查询 -->
+    <select id="queryPage" resultType="com.project.platform.entity.ProductOrder">
+        select * from product_order
+        <include refid="queryConditions"/>
+        order by id desc
+        limit #{offset},#{pageSize}
+    </select>
+
+    <!-- 查询总数 -->
+    <select id="queryCount" resultType="int">
+        select count(id) from product_order
+        <include refid="queryConditions"/>
+    </select>
+
+    <!-- 公共查询条件 -->
+    <sql id="queryConditions">
+        <where>
+            <if test="query.productName != null and query.productName.trim() != ''">
+                and product_name like concat('%',#{query.productName},'%')
+            </if>
+            <if test="query.username != null and query.username.trim() != ''">
+                and username like concat('%',#{query.username},'%')
+            </if>
+            <if test="query.status != null and query.status.trim() != ''">
+                and status = #{query.status}
+            </if>
+            <if test="query.receiverName != null and query.receiverName.trim() != ''">
+                and receiver_name like concat('%',#{query.receiverName},'%')
+            </if>
+        </where>
+    </sql>
+
+    <!-- 插入 -->
+    <insert id="insert" parameterType="com.project.platform.entity.ProductOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into product_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productName != null">product_name,</if>
+            <if test="username != null">username,</if>
+            <if test="price != null">price,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="status != null">status,</if>
+            <if test="receiverName != null">receiver_name,</if>
+            <if test="receiverPhone != null">receiver_phone,</if>
+            <if test="receiverAddress != null">receiver_address,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productName != null">#{productName},</if>
+            <if test="username != null">#{username},</if>
+            <if test="price != null">#{price},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="status != null">#{status},</if>
+            <if test="receiverName != null">#{receiverName},</if>
+            <if test="receiverPhone != null">#{receiverPhone},</if>
+            <if test="receiverAddress != null">#{receiverAddress},</if>
+        </trim>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateById" parameterType="com.project.platform.entity.ProductOrder">
+        update product_order
+        <set>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="receiverName != null">receiver_name = #{receiverName},</if>
+            <if test="receiverPhone != null">receiver_phone = #{receiverPhone},</if>
+            <if test="receiverAddress != null">receiver_address = #{receiverAddress},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById">
+        delete from product_order where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

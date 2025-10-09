@@ -1,0 +1,207 @@
+/* 前端模块通用样式 */
+
+/* 通用容器样式 */
+.front-pet-diary,
+.front-product-list,
+.front-personal-center {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* 搜索容器 - 复用HelpMessage的样式 */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.search-input {
+  max-width: 500px;
+}
+
+.search-input :deep(.el-input__wrapper) {
+  border-radius: 20px 0 0 20px;
+  border: 2px solid var(--gray-200);
+  transition: all 0.3s ease;
+}
+
+.search-input :deep(.el-input__wrapper:hover) {
+  border-color: var(--accent-cyan);
+}
+
+.search-input :deep(.el-input__wrapper.is-focus) {
+  border-color: var(--primary-orange);
+  box-shadow: 0 2px 12px var(--shadow-primary);
+}
+
+.search-btn {
+  border-radius: 0 20px 20px 0;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+  background: var(--primary-orange-dark);
+  transform: translateY(-1px);
+}
+
+.filter-radio {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.filter-radio :deep(.el-radio-button__inner) {
+  border-radius: 20px;
+  border: 2px solid var(--gray-200);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.filter-radio :deep(.el-radio-button__original-radio:checked + .el-radio-button__inner) {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: var(--primary-orange);
+  box-shadow: 0 2px 8px var(--shadow-primary);
+}
+
+/* 商品列表样式 */
+.front-product-list .el-card {
+  transition: all 0.3s ease;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.front-product-list .el-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 32px var(--shadow-primary);
+  border-color: var(--primary-orange-light);
+}
+
+/* 价格样式 */
+.front-product-list .price-tag {
+  color: var(--primary-orange);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* 个人中心样式 */
+.front-personal-center {
+  padding: 0;
+}
+
+.front-personal-center :deep(.el-tabs__header) {
+  background: var(--bg-primary);
+  border-radius: 16px 0 0 16px;
+  padding: 20px 0;
+}
+
+.front-personal-center :deep(.el-tabs__nav) {
+  border: none;
+}
+
+.front-personal-center :deep(.el-tabs__item) {
+  border: none;
+  padding: 12px 24px;
+  margin: 4px 12px;
+  border-radius: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.front-personal-center :deep(.el-tabs__item:hover) {
+  background: var(--bg-accent);
+  color: var(--primary-orange);
+}
+
+.front-personal-center :deep(.el-tabs__item.is-active) {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 2px 8px var(--shadow-primary);
+}
+
+.front-personal-center :deep(.el-tabs__content) {
+  padding: 24px;
+  background: var(--bg-primary);
+  border-radius: 0 16px 16px 0;
+  margin-left: 20px;
+}
+
+/* 日记卡片样式 */
+.front-pet-diary .el-card {
+  margin-bottom: 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.front-pet-diary .el-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px var(--shadow-primary);
+}
+
+.front-pet-diary :deep(.el-card__header h3::before) {
+  content: '📔';
+  margin-right: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .front-pet-diary,
+  .front-product-list,
+  .front-personal-center {
+    padding: 16px;
+  }
+
+  .search-container {
+    gap: 12px;
+  }
+
+  .search-input {
+    max-width: 100%;
+  }
+
+  .filter-radio {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .front-personal-center :deep(.el-tabs__content) {
+    margin-left: 0;
+    margin-top: 16px;
+    border-radius: 16px;
+  }
+
+  .front-personal-center :deep(.el-tabs__header) {
+    border-radius: 16px 16px 0 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input :deep(.el-input__wrapper) {
+    border-radius: 20px;
+  }
+
+  .search-btn {
+    border-radius: 20px;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .front-personal-center :deep(.el-tabs__item) {
+    padding: 10px 16px;
+    margin: 2px 8px;
+    font-size: 14px;
+  }
+}

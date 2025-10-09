@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.platform.mapper.HelpMessageMapper">
+<!--分页查询-->
+    <select id="queryPage" resultType="com.project.platform.entity.HelpMessage">
+        select help_message.*,user.username as username,user.avatar_url as userAvatarUrl
+        from help_message
+        left join user on help_message.user_id=user.id
+        <include refid="queryConditions"/>
+        order by help_message.id desc
+        limit #{offset},#{pageSize}
+    </select>
+
+<!--查询总数-->
+    <select id="queryCount" resultType="int">
+        select count(help_message.id) from help_message
+        left join user on help_message.user_id=user.id
+        <include refid="queryConditions"/>
+    </select>
+
+<!--查询条件-->
+    <sql id="queryConditions">
+        <where>
+            <if test="query.title != null and query.title.trim() != ''">
+                and help_message.title like concat('%',#{query.title},'%')
+            </if>
+            <if test="query.userId != null">
+                and help_message.user_id = #{query.userId}
+            </if>
+            <if test="query.username != null and query.username.trim() != ''">
+                and user.username like concat('%',#{query.username},'%')
+            </if>
+        </where>
+    </sql>
+
+<!--插入-->
+    <insert id="insert" parameterType="com.project.platform.entity.HelpMessage" useGeneratedKeys="true" keyProperty="id">
+        insert into help_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="userId != null">user_id,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+
+<!--更新-->
+    <update id="updateById" parameterType="com.project.platform.entity.HelpMessage">
+        update help_message
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+<!--根据id删除数据删除-->
+    <delete id="deleteById">
+        delete from help_message where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.platform.mapper.UserMapper">
+<!--    void insert(User entity);-->
+<insert id="insert" parameterType="com.project.platform.entity.User" useGeneratedKeys="true" keyProperty="id">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="username!=null">username,</if>
+        <if test="password!=null">password,</if>
+        <if test="nickname!=null">nickname,</if>
+        <if test="avatarUrl!=null">avatar_url,</if>
+        <if test="tel!=null">tel,</if>
+        <if test="email!=null">email,</if>
+        <if test="status!=null">status,</if>
+        <if test="balance!=null">balance,</if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="username!=null">#{username},</if>
+        <if test="password!=null">#{password},</if>
+        <if test="nickname!=null">#{nickname},</if>
+        <if test="avatarUrl!=null">#{avatarUrl},</if>
+        <if test="tel!=null">#{tel},</if>
+        <if test="email!=null">#{email},</if>
+        <if test="status!=null">#{status},</if>
+        <if test="balance!=null">#{balance},</if>
+    </trim>
+</insert>
+    
+<!--    void updateById(User entity);-->
+<update id="updateById" parameterType="com.project.platform.entity.User">
+    update user
+    <set>
+        <if test="username!=null">username=#{username},</if>
+        <if test="password!=null">password=#{password},</if>
+        <if test="nickname!=null">nickname=#{nickname},</if>
+        <if test="avatarUrl!=null">avatar_url=#{avatarUrl},</if>
+        <if test="tel!=null">tel=#{tel},</if>
+        <if test="email!=null">email=#{email},</if>
+        <if test="status!=null">status=#{status},</if>
+        <if test="balance!=null">balance=#{balance},</if>
+    </set>
+    where id = #{id}
+</update>
+
+<!--    void deleteById(int id);    -->
+ <delete id="deleteById">
+     delete from user where id in 
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+ </delete>
+
+<!--分页查询    -->
+<select id="queryPage" resultType="com.project.platform.entity.User">
+    select user.* from user
+    <include refid="queryConditions"></include>
+    order by user.id desc
+    limit #{offset},#{pageSize}
+</select>
+
+    <!--查询条件    -->
+<sql id="queryConditions">
+    <where>
+        <if test="query.username != null and query.username.trim() != ''">
+            and user.username like concat('%',#{query.username},'%')
+        </if>
+        <if test="query.tel != null and query.tel.trim() != ''">
+            and user.tel like concat('%',#{query.tel},'%')
+        </if>
+        <if test="query.status != null and query.status.trim() != ''">
+            and user.status like concat('%',#{query.status},'%')
+        </if>
+    </where>
+</sql>
+
+<!--查询总数    -->
+<select id="queryCount" resultType="java.lang.Integer">
+    select count(user.id) from user
+    <include refid="queryConditions"></include>
+</select>
+</mapper>

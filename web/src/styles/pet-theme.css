@@ -1,0 +1,287 @@
+/* 宠物综合服务平台 - 全局色彩系统 */
+
+:root {
+  /* ===== 主色调 ===== */
+  --primary-orange: #FFA86E;  /* 柔和橙色 - 主色 */
+  --accent-cyan: #6ED4C8;     /* 浅青色 - 辅色 */
+
+  /* ===== 扩展色彩 ===== */
+  --primary-orange-light: #FFB887;
+  --primary-orange-dark: #E8985A;
+  --accent-cyan-light: #8FE3D9;
+  --accent-cyan-dark: #5DC0B5;
+
+  /* ===== 渐变色系 ===== */
+  --gradient-primary: linear-gradient(135deg, #FFA86E 0%, #FFB887 100%);
+  --gradient-accent: linear-gradient(135deg, #6ED4C8 0%, #8FE3D9 100%);
+  --gradient-header: linear-gradient(135deg, #FFA86E 0%, #6ED4C8 100%);
+  --gradient-warm: linear-gradient(135deg, #FFF8F2 0%, #FFA86E 100%);
+  --gradient-cool: linear-gradient(135deg, #6ED4C8 0%, #FFA86E 100%);
+
+  /* ===== 功能色系 ===== */
+  --success: #4caf50;
+  --warning: #ff9800;
+  --danger: #f44336;
+  --info: #2196f3;
+
+  /* ===== 中性色系 ===== */
+  --gray-50: #FFF8F2;      /* 奶白色背景 */
+  --gray-100: #F5F5F5;
+  --gray-200: #EEEEEE;
+  --gray-300: #E0E0E0;
+  --gray-400: #BDBDBD;
+  --gray-500: #9E9E9E;
+  --gray-600: #757575;
+  --gray-700: #616161;
+  --gray-800: #424242;
+  --gray-900: #333333;      /* 深灰文字 */
+
+  /* ===== 文字色系 ===== */
+  --text-primary: #333333;  /* 深灰标题与正文 */
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --text-white: #FFFFFF;
+  --text-accent: var(--accent-cyan);
+
+  /* ===== 背景色系 ===== */
+  --bg-primary: #FFFFFF;    /* 纯白模块背景 */
+  --bg-secondary: #FFF8F2;  /* 奶白色整体背景 */
+  --bg-accent: rgba(255, 168, 110, 0.08);
+  --bg-card: rgba(255, 255, 255, 0.9);
+
+  /* ===== 阴影色系 ===== */
+  --shadow-primary: rgba(255, 168, 110, 0.2);
+  --shadow-accent: rgba(110, 212, 200, 0.2);
+  --shadow-neutral: rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* ===== 圆角系统 ===== */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 50%;
+
+  /* ===== 间距系统 ===== */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* ===== 过渡动画 ===== */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.4s ease;
+}
+
+/* ===== 通用工具类 ===== */
+.gradient-primary {
+  background: var(--gradient-primary);
+  color: var(--text-white);
+}
+
+.gradient-accent {
+  background: var(--gradient-accent);
+  color: var(--text-white);
+}
+
+.gradient-header {
+  background: var(--gradient-header);
+  color: var(--text-white);
+}
+
+.gradient-warm {
+  background: var(--gradient-warm);
+  color: var(--text-primary);
+}
+
+.gradient-cool {
+  background: var(--gradient-cool);
+  color: var(--text-white);
+}
+
+.text-gradient-primary {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-accent {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-accent {
+  color: var(--text-accent);
+}
+
+.shadow-primary {
+  box-shadow: 0 4px 12px var(--shadow-primary);
+}
+
+.shadow-accent {
+  box-shadow: 0 4px 12px var(--shadow-accent);
+}
+
+.shadow-neutral {
+  box-shadow: 0 4px 12px var(--shadow-neutral);
+}
+
+/* ===== 悬停效果 ===== */
+.hover-lift {
+  transition: var(--transition-normal);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== 按钮主题 ===== */
+.btn-pet-primary {
+  background: var(--gradient-primary);
+  color: var(--text-white);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: var(--transition-normal);
+  box-shadow: 0 2px 8px var(--shadow-primary);
+  cursor: pointer;
+}
+
+.btn-pet-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--shadow-primary);
+  background: var(--primary-orange-dark);
+}
+
+.btn-pet-secondary {
+  background: var(--gradient-accent);
+  color: var(--text-white);
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: var(--transition-normal);
+  box-shadow: 0 2px 8px var(--shadow-accent);
+  cursor: pointer;
+}
+
+.btn-pet-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--shadow-accent);
+  background: var(--accent-cyan-dark);
+}
+
+.btn-pet-outline {
+  background: transparent;
+  color: var(--primary-orange);
+  border: 2px solid var(--primary-orange);
+  border-radius: var(--radius-full);
+  padding: 8px 22px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: var(--transition-normal);
+  cursor: pointer;
+}
+
+.btn-pet-outline:hover {
+  background: var(--primary-orange);
+  color: var(--text-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-primary);
+}
+
+/* ===== 卡片主题 ===== */
+.card-pet {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-neutral);
+  border: 1px solid var(--gray-200);
+  transition: var(--transition-normal);
+  overflow: hidden;
+}
+
+.card-pet:hover {
+  box-shadow: 0 8px 24px var(--shadow-neutral);
+  transform: translateY(-4px);
+  border-color: var(--primary-orange-light);
+}
+
+.card-pet-accent {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-neutral);
+  border-left: 4px solid var(--primary-orange);
+  transition: var(--transition-normal);
+}
+
+.card-pet-accent:hover {
+  box-shadow: 0 8px 24px var(--shadow-primary);
+  transform: translateY(-2px);
+}
+
+/* ===== 背景装饰 ===== */
+.bg-pet-pattern {
+  background: var(--bg-secondary);
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(255, 168, 110, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(110, 212, 200, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 168, 110, 0.03) 0%, transparent 70%);
+}
+
+/* ===== 动画效果 ===== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-gentle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-gentle {
+  animation: pulse-gentle 2s ease-in-out infinite;
+}
+
+/* ===== Element Plus 导航菜单样式重置 ===== */
+
+/* 导航菜单重置 */
+.el-menu--horizontal {
+  border-bottom: none !important;
+  background: transparent !important;
+}
+
+.el-menu--horizontal .el-menu-item {
+  border-bottom: none !important;
+  background: transparent !important;
+  color: white !important;
+}
+
+.el-menu--horizontal .el-menu-item.is-active {
+  border-bottom: none !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #ffd93d !important;
+}
+
+.el-menu--horizontal .el-menu-item:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
