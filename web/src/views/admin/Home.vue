@@ -39,11 +39,31 @@ onMounted(() => {
 }
 
 .welcome-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 50%, #34495e 100%);
+  color: #ffffff;
   padding: 30px;
   border-radius: 12px;
   margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.welcome-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 255, 255, 0.05) 10px,
+    rgba(255, 255, 255, 0.05) 20px
+  );
+  pointer-events: none;
 }
 
 .welcome-section h2 {
