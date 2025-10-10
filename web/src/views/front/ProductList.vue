@@ -8,11 +8,10 @@
           </div>
         </div>
         <div class="search-container">
-          <el-input v-model="searchForm.name" placeholder="请输入关键字搜索" class="search-input" clearable>
-            <template #append>
-              <el-button :icon="Search" @click="search" class="search-btn">搜索</el-button>
-            </template>
-          </el-input>
+          <el-space style="align-items: center">
+            <el-input v-model="searchForm.name" placeholder="请输入关键字搜索" clearable @keyup.enter="search" style="width: 300px"/>
+            <el-button type="primary" :icon="Search" @click="search" class="search-btn-capsule">搜索</el-button>
+          </el-space>
         </div>
       </div>
 
@@ -63,6 +62,47 @@
   margin: 0 auto;
   position: relative;
   z-index: 1;
+}
+
+/* 搜索容器样式 */
+.search-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* 胶囊形状搜索按钮样式 */
+.search-btn-capsule {
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  padding: 12px 28px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px var(--shadow-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  min-width: 100px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.search-btn-capsule:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--shadow-primary);
+  background: linear-gradient(135deg, #ff8c42, #ff6b35);
+}
+
+.search-btn-capsule:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px var(--shadow-primary);
+}
+
+.search-btn-capsule .el-icon {
+  font-size: 16px;
 }
 
 /* 价格标签 */

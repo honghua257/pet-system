@@ -6,16 +6,17 @@
             <span class="front-section-icon">📔</span>
             <span>宠物日记</span>
           </div>
-          <el-button type="success" @click="add" :icon="Plus" class="btn-pet-primary">写日记</el-button>
+          <el-button type="primary" @click="add" :icon="Plus" class="publish-diary-btn">写日记</el-button>
         </div>
         <div class="search-container">
-          <el-space style="flex-wrap: wrap;gap: 15px">
-            <el-button type="primary" :icon="Search" @click="search" class="search-btn">搜索</el-button>
+          <el-space style="flex-wrap: wrap;gap: 15px;align-items: center">
             <el-input v-model="searchForm.title"
                       placeholder="请输入关键词搜索"
                       style="width: 300px"
                       clearable
-                      @keyup.enter="search"/>
+                      @keyup.enter="search"
+                      class="search-input"/>
+            <el-button type="primary" :icon="Search" @click="search" class="search-btn-capsule">搜索</el-button>
             <el-radio-group v-model="searchForm.onlyYou" @change="search" class="filter-radio">
               <el-radio-button :label="false">查看全部</el-radio-button>
               <el-radio-button :label="true">只看自己</el-radio-button>
@@ -261,9 +262,93 @@ function batchDelete(rows){
   z-index: 1;
 }
 
+/* 写日记按钮样式（参考发布求助按钮） */
+.publish-diary-btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: none;
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 2px 8px var(--shadow-primary);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.publish-diary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-primary);
+  background: linear-gradient(135deg, #ff8c42, #ff6b35);
+}
+
+.publish-diary-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px var(--shadow-primary);
+}
+
 /* 搜索区域布局 */
 .search-container {
   margin-top: 20px;
+}
+
+/* 搜索输入框样式 */
+.search-input {
+  border-radius: 25px;
+}
+
+.search-input :deep(.el-input__wrapper) {
+  border-radius: 25px;
+  border: 2px solid var(--gray-200);
+  transition: all 0.3s ease;
+  padding: 0 16px;
+  background: var(--bg-primary);
+}
+
+.search-input :deep(.el-input__wrapper:hover) {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 2px 8px var(--shadow-accent);
+}
+
+.search-input :deep(.el-input__wrapper.is-focus) {
+  border-color: var(--primary-orange);
+  box-shadow: 0 2px 12px var(--shadow-primary);
+}
+
+/* 胶囊形状搜索按钮样式 */
+.search-btn-capsule {
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  padding: 12px 28px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px var(--shadow-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  min-width: 100px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.search-btn-capsule:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--shadow-primary);
+  background: linear-gradient(135deg, #ff8c42, #ff6b35);
+}
+
+.search-btn-capsule:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px var(--shadow-primary);
+}
+
+.search-btn-capsule .el-icon {
+  font-size: 16px;
 }
 
 .filter-radio {
@@ -286,32 +371,6 @@ function batchDelete(rows){
   color: white;
   border-color: var(--primary-orange);
   box-shadow: 0 2px 8px var(--shadow-primary);
-}
-
-/* 搜索按钮样式 */
-.search-btn {
-  background: var(--gradient-primary);
-  border: none;
-  border-radius: 20px;
-  color: white;
-  font-weight: 600;
-  padding: 10px 24px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px var(--shadow-primary);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.search-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px var(--shadow-primary);
-  background: var(--primary-orange-dark);
-}
-
-.search-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px var(--shadow-primary);
 }
 
 /* 用户信息样式 */

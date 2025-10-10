@@ -1,14 +1,16 @@
 <template>
   <div class="front-my-pet front-content">
-      <div class="front-section">
-        <div class="front-section-header">
-          <div class="front-section-title">
-            <span class="front-section-icon">🐾</span>
-            <span>我的宠物</span>
-          </div>
-          <el-button type="success" @click="add" :icon="Plus" class="btn-pet-primary">新增宠物</el-button>
+    <div class="front-section">
+      <div class="front-section-header">
+        <div class="front-section-title">
+          <span class="front-section-icon">🐾</span>
+          <span>我的宠物</span>
         </div>
+        <el-button type="success" @click="add" :icon="Plus" class="btn-pet-primary">新增宠物</el-button>
       </div>
+    </div>
+
+    <div class="pet-list">
       <el-row :gutter="20">
         <el-col :span="6" v-for="(item,index) in listData" :key="item.id">
           <el-card shadow="hover" class="pet-card front-card front-fade-in" :class="'front-stagger-' + ((index % 4) + 1)" :style="index>3 ?{marginTop:'10px'}:null">
@@ -29,7 +31,8 @@
                 :src="item.mainImg"
                 class="pet-image"
                 fit="cover"
-                :preview-src-list="[item.mainImg]"
+                :preview-src-list="[]"
+                @click="openFullscreen(item.mainImg)"
               />
             </div>
 
@@ -49,7 +52,7 @@
             </div>
           </el-card>
         </el-col>
-      </el-row>
+        </el-row>
 
       <!-- 分页组件 -->
       <el-card class="pagination-card">
@@ -64,6 +67,7 @@
             class="unified-pagination">
         </el-pagination>
       </el-card>
+    </div>
 
     <!-- 新增/编辑宠物对话框 -->
     <el-dialog
@@ -195,6 +199,53 @@
         <el-button type="primary" @click="fosterCareSubmit">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 全屏图片预览 -->
+    <div
+      v-if="showFullscreen"
+      class="fullscreen-overlay"
+      @click="closeFullscreen"
+      @wheel.prevent="handleZoom"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
+    >
+      <div class="fullscreen-container">
+        <img
+          :src="fullscreenImage"
+          class="fullscreen-image"
+          :style="imageStyle"
+          @click.stop
+          @mousedown="handleMouseDown"
+          @mousemove="handleMouseMove"
+          @mouseup="handleMouseUp"
+          @mouseleave="handleMouseUp"
+        />
+        <button class="close-btn" @click="closeFullscreen">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="zoom-in-btn" @click.stop="zoomIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="zoom-out-btn" @click.stop="zoomOut">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 21l-4.35-4.35M8 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="reset-btn" @click.stop="resetZoom">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M1 4v6h6M23 20v-6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
@@ -202,7 +253,7 @@ import request from "@/utils/http.js";
 import {Plus} from "@element-plus/icons-vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 import router from "@/router/index.js";
-import {ref, toRaw} from "vue";
+import {ref, toRaw, computed, onMounted, onUnmounted} from "vue";
 import tools from "@/utils/tools.js";
 import MyEditor from "@/components/MyEditor.vue";
 import MyUpload from "@/components/MyUpload.vue";
@@ -451,6 +502,142 @@ function fosterCareSubmit(){
   })
 }
 
+// 全屏图片预览功能
+const showFullscreen = ref(false)
+const fullscreenImage = ref('')
+const scale = ref(1)
+const translateX = ref(0)
+const translateY = ref(0)
+const isDragging = ref(false)
+const startX = ref(0)
+const startY = ref(0)
+const lastX = ref(0)
+const lastY = ref(0)
+
+const imageStyle = computed(() => ({
+  transform: `translate(${translateX.value}px, ${translateY.value}px) scale(${scale.value})`,
+  transition: isDragging.value ? 'none' : 'transform 0.3s ease',
+  cursor: isDragging.value ? 'grabbing' : 'grab'
+}))
+
+function openFullscreen(imageSrc) {
+  fullscreenImage.value = imageSrc
+  showFullscreen.value = true
+  resetZoom()
+  document.body.style.overflow = 'hidden'
+}
+
+function closeFullscreen() {
+  showFullscreen.value = false
+  document.body.style.overflow = ''
+  resetZoom()
+}
+
+function zoomIn() {
+  scale.value = Math.min(scale.value * 1.2, 5)
+}
+
+function zoomOut() {
+  scale.value = Math.max(scale.value / 1.2, 0.5)
+}
+
+function resetZoom() {
+  scale.value = 1
+  translateX.value = 0
+  translateY.value = 0
+}
+
+function handleZoom(e) {
+  e.preventDefault()
+  const delta = e.deltaY > 0 ? 0.9 : 1.1
+  scale.value = Math.max(0.5, Math.min(5, scale.value * delta))
+}
+
+// 鼠标拖拽功能
+function handleMouseDown(e) {
+  if (scale.value > 1) {
+    isDragging.value = true
+    startX.value = e.clientX - lastX.value
+    startY.value = e.clientY - lastY.value
+  }
+}
+
+function handleMouseMove(e) {
+  if (isDragging.value && scale.value > 1) {
+    e.preventDefault()
+    lastX.value = e.clientX - startX.value
+    lastY.value = e.clientY - startY.value
+    translateX.value = lastX.value
+    translateY.value = lastY.value
+  }
+}
+
+function handleMouseUp() {
+  isDragging.value = false
+}
+
+// 触摸功能（移动端支持）
+let touchStartDistance = 0
+let touchStartScale = 1
+
+function handleTouchStart(e) {
+  if (e.touches.length === 2) {
+    // 双指缩放
+    const dx = e.touches[0].clientX - e.touches[1].clientX
+    const dy = e.touches[0].clientY - e.touches[1].clientY
+    touchStartDistance = Math.sqrt(dx * dx + dy * dy)
+    touchStartScale = scale.value
+  } else if (e.touches.length === 1 && scale.value > 1) {
+    // 单指拖拽
+    isDragging.value = true
+    startX.value = e.touches[0].clientX - lastX.value
+    startY.value = e.touches[0].clientY - lastY.value
+  }
+}
+
+function handleTouchMove(e) {
+  e.preventDefault()
+  if (e.touches.length === 2) {
+    // 双指缩放
+    const dx = e.touches[0].clientX - e.touches[1].clientX
+    const dy = e.touches[0].clientY - e.touches[1].clientY
+    const distance = Math.sqrt(dx * dx + dy * dy)
+    const scaleChange = distance / touchStartDistance
+    scale.value = Math.max(0.5, Math.min(5, touchStartScale * scaleChange))
+  } else if (e.touches.length === 1 && isDragging.value) {
+    // 单指拖拽
+    lastX.value = e.touches[0].clientX - startX.value
+    lastY.value = e.touches[0].clientY - startY.value
+    translateX.value = lastX.value
+    translateY.value = lastY.value
+  }
+}
+
+function handleTouchEnd() {
+  isDragging.value = false
+}
+
+// 键盘事件监听
+onMounted(() => {
+  document.addEventListener('keydown', (e) => {
+    if (showFullscreen.value) {
+      if (e.key === 'Escape') {
+        closeFullscreen()
+      } else if (e.key === '+' || e.key === '=') {
+        zoomIn()
+      } else if (e.key === '-' || e.key === '_') {
+        zoomOut()
+      } else if (e.key === '0') {
+        resetZoom()
+      }
+    }
+  })
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', closeFullscreen)
+  document.body.style.overflow = ''
+})
 
 </script>
 
@@ -465,6 +652,11 @@ function fosterCareSubmit(){
   margin: 0 auto;
   position: relative;
   z-index: 1;
+}
+
+/* 宠物列表容器 */
+.pet-list {
+  margin-top: 32px;
 }
 
 /* 宠物卡片头部样式 */
@@ -735,5 +927,187 @@ function fosterCareSubmit(){
     margin-left: 0;
     align-self: flex-end;
   }
+}
+
+/* 全屏图片预览样式 */
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fullscreen-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreen-image {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: auto;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* 控制按钮样式 */
+.close-btn,
+.zoom-in-btn,
+.zoom-out-btn,
+.reset-btn {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+  top: 20px;
+  right: 20px;
+}
+
+.zoom-in-btn {
+  top: 20px;
+  right: 80px;
+}
+
+.zoom-out-btn {
+  top: 80px;
+  right: 20px;
+}
+
+.reset-btn {
+  top: 80px;
+  right: 80px;
+}
+
+.close-btn:hover,
+.zoom-in-btn:hover,
+.zoom-out-btn:hover,
+.reset-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn:active,
+.zoom-in-btn:active,
+.zoom-out-btn:active,
+.reset-btn:active {
+  transform: scale(0.95);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .close-btn {
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .zoom-in-btn {
+    top: 10px;
+    right: 60px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .zoom-out-btn {
+    top: 60px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .reset-btn {
+    top: 60px;
+    right: 60px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .fullscreen-image {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+}
+
+/* 添加点击提示 */
+.pet-image {
+  cursor: pointer;
+  position: relative;
+}
+
+.pet-image::after {
+  content: '🔍 点击查看大图';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.pet-image:hover::after {
+  opacity: 1;
+}
+
+/* 加载状态 */
+.fullscreen-image {
+  transition: opacity 0.3s ease;
+}
+
+.fullscreen-image.loading {
+  opacity: 0.5;
+}
+
+/* 防止文字选择 */
+.fullscreen-overlay {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style>
