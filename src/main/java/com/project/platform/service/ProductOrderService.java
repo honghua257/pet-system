@@ -11,7 +11,15 @@ public interface ProductOrderService {
 
     ProductOrder selectById(Integer id);
 
+  ProductOrder selectByIdAndUsername(Integer id, String username);
+
     List<ProductOrder> list();
+
+  List<ProductOrder> listByUsername(String username);
+
+  List<ProductOrder> listByUserId(Integer userId);
+
+  ProductOrder selectByIdAndUserId(Integer id, Integer userId);
 
     void insert(ProductOrder entity);
 

@@ -129,8 +129,10 @@ const pageInfo = ref({ pageNum: 1, pageSize: 10, total: 0 })
 getPageList()
 
 function getPageList() {
+  const currentUser = tools.getCurrentUser()
   const data = {
     status: selectedStatus.value,
+    userId: currentUser?.id,
     ...toRaw(pageInfo.value)
   }
   request.get("/productOrder/page", { params: data }).then(res => {

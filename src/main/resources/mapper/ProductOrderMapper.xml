@@ -24,7 +24,10 @@
                 and product_name like concat('%',#{query.productName},'%')
             </if>
             <if test="query.username != null and query.username.trim() != ''">
-                and username like concat('%',#{query.username},'%')
+                and username = #{query.username}
+            </if>
+            <if test="query.userId != null">
+                and user_id = #{query.userId}
             </if>
             <if test="query.status != null and query.status.trim() != ''">
                 and status = #{query.status}
@@ -41,6 +44,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="productName != null">product_name,</if>
             <if test="username != null">username,</if>
+            <if test="userId != null">user_id,</if>
             <if test="price != null">price,</if>
             <if test="quantity != null">quantity,</if>
             <if test="status != null">status,</if>
@@ -52,6 +56,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="productName != null">#{productName},</if>
             <if test="username != null">#{username},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="price != null">#{price},</if>
             <if test="quantity != null">#{quantity},</if>
             <if test="status != null">#{status},</if>

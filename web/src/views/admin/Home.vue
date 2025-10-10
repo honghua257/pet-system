@@ -10,18 +10,11 @@
     </el-row>
 
     <el-row :gutter="20" style="margin-top: 20px;">
-      <el-col :span="24">
-        <el-card class="chart-card">
-          <SalesTrendChart />
-        </el-card>
+      <el-col :span="12">
+        <SalesChart height="450px" />
       </el-col>
-    </el-row>
-
-    <el-row :gutter="20" style="margin-top: 20px;">
-      <el-col :span="24">
-        <el-card class="chart-card">
-          <PetTypePieChart />
-        </el-card>
+      <el-col :span="12">
+        <PetTypePieChart height="450px" />
       </el-col>
     </el-row>
   </div>
@@ -30,8 +23,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import tools from '@/utils/tools.js'
-import SalesTrendChart from '@/components/charts/SalesTrendChart.vue'
-import PetTypePieChart from '@/components/charts/PetTypePieChart.vue'
+import SalesChart from '@/components/SalesChart.vue'
+import PetTypePieChart from '@/components/PetTypePieChart.vue'
 
 const currentUser = ref(null)
 

@@ -32,4 +32,11 @@ public interface PetTypeMapper {
     @Select("select * from pet_type where name = #{name} limit 1")
     PetType selectByName(@Param("name") String name);
 
+    @Select("SELECT pt.name as pet_type_name, pt.id as pet_type_id, COUNT(p.id) as pet_count " +
+            "FROM pet_type pt " +
+            "LEFT JOIN pet p ON pt.id = p.pet_type_id " +
+            "GROUP BY pt.id, pt.name " +
+            "ORDER BY pet_count DESC, pt.id ASC")
+    List<Map<String, Object>> getPetTypeDistribution();
+
 }

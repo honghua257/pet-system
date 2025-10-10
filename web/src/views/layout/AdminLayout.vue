@@ -16,12 +16,6 @@
           </el-icon>
           <span>首页</span>
         </el-menu-item>
-        <el-menu-item index="/admin/charts" v-if="currentUser.type==='ADMIN'">
-          <el-icon>
-            <TrendCharts/>
-          </el-icon>
-          <span>数据统计</span>
-        </el-menu-item>
         <el-menu-item index="/admin/admin" v-if="currentUser.type==='ADMIN'">
           <el-icon>
             <User/>

@@ -10,6 +10,7 @@ public class ProductOrder {
     private Integer id;
     private String productName;
     private String username;
+    private Integer userId;
     private BigDecimal price;
     private Integer quantity;
     private String status;

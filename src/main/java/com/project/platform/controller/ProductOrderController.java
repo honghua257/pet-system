@@ -26,12 +26,35 @@ public class ProductOrderController {
     }
 
     @GetMapping("selectById/{id}")
-    public ResponseVO<ProductOrder> selectById(@PathVariable("id") Integer id) {
+    public ResponseVO<ProductOrder> selectById(@PathVariable("id") Integer id,
+                                               @RequestParam(required = false) String username,
+                                               @RequestParam(required = false) Integer userId) {
+        if (userId != null) {
+            ProductOrder order = productOrderService.selectByIdAndUserId(id, userId);
+            if (order == null) {
+                return ResponseVO.fail(404, "订单不存在或无权限查看");
+            }
+            return ResponseVO.ok(order);
+        }
+        if (username != null && !username.trim().isEmpty()) {
+            ProductOrder order = productOrderService.selectByIdAndUsername(id, username.trim());
+            if (order == null) {
+                return ResponseVO.fail(404, "订单不存在或无权限查看");
+            }
+            return ResponseVO.ok(order);
+        }
         return ResponseVO.ok(productOrderService.selectById(id));
     }
 
     @GetMapping("list")
-    public ResponseVO<List<ProductOrder>> list() {
+    public ResponseVO<List<ProductOrder>> list(@RequestParam(required = false) String username,
+                                              @RequestParam(required = false) Integer userId) {
+        if (userId != null) {
+            return ResponseVO.ok(productOrderService.listByUserId(userId));
+        }
+        if (username != null && !username.trim().isEmpty()) {
+            return ResponseVO.ok(productOrderService.listByUsername(username.trim()));
+        }
         return ResponseVO.ok(productOrderService.list());
     }
 

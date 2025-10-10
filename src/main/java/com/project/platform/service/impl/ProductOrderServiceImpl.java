@@ -30,8 +30,28 @@ public class ProductOrderServiceImpl implements ProductOrderService {
     }
 
     @Override
+    public ProductOrder selectByIdAndUsername(Integer id, String username) {
+        return productOrderMapper.selectByIdAndUsername(id, username);
+    }
+
+    @Override
+    public List<ProductOrder> listByUserId(Integer userId) {
+        return productOrderMapper.listByUserId(userId);
+    }
+
+    @Override
+    public ProductOrder selectByIdAndUserId(Integer id, Integer userId) {
+        return productOrderMapper.selectByIdAndUserId(id, userId);
+    }
+
+    @Override
     public List<ProductOrder> list() {
         return productOrderMapper.list();
+    }
+
+    @Override
+    public List<ProductOrder> listByUsername(String username) {
+        return productOrderMapper.listByUsername(username);
     }
 
     @Override
