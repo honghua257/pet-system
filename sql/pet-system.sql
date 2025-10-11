@@ -11,7 +11,7 @@
  Target Server Version : 80405 (8.4.5)
  File Encoding         : 65001
 
- Date: 09/10/2025 23:51:12
+ Date: 11/10/2025 13:00:01
 */
 
 SET NAMES utf8mb4;
@@ -51,7 +51,7 @@ CREATE TABLE `help_message`  (
   `user_id` int NOT NULL COMMENT '用户',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '信息求助表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '信息求助表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of help_message
@@ -59,6 +59,11 @@ CREATE TABLE `help_message`  (
 INSERT INTO `help_message` VALUES (1, '123', '123456', 1, '2025-09-23 18:37:46');
 INSERT INTO `help_message` VALUES (2, '34565432', '15更多v在测序放下你从', 1, '2025-10-01 18:11:27');
 INSERT INTO `help_message` VALUES (3, 'cmnzhcssca', '权威的和帮助下啊擦9啊擦时间为啊u成本', 1, '2025-10-01 18:11:46');
+INSERT INTO `help_message` VALUES (4, '78976', '好好减肥计划', 1, '2025-10-10 00:00:08');
+INSERT INTO `help_message` VALUES (5, '9999', '阿莎v查手机几千万的', 2, '2025-10-10 14:47:26');
+INSERT INTO `help_message` VALUES (6, '7654', '看着不错科比科比支持在线吗额', 2, '2025-10-10 15:06:46');
+INSERT INTO `help_message` VALUES (7, '32544455', '是擦着v大包小包共同特点到', 2, '2025-10-10 15:11:56');
+INSERT INTO `help_message` VALUES (8, '093823热点城市', '吃撒就擦借我点钱从偶像除了', 9, '2025-10-10 15:15:13');
 
 -- ----------------------------
 -- Table structure for pet
@@ -73,13 +78,22 @@ CREATE TABLE `pet`  (
   `user_id` int NOT NULL COMMENT '所属用户',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '宠物信息' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '宠物信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of pet
 -- ----------------------------
 INSERT INTO `pet` VALUES (2, '小九', 'http://localhost:1000/file/cad0d45851ba72c7ff89cdffa79967f5.jpg', 1, '', 1, '2025-09-27 19:28:49');
 INSERT INTO `pet` VALUES (4, '九哥', 'http://localhost:1000/file/ac39fe1dd819107b52fc0d75a146a327.jpg', 1, '一只可爱的小猫咪', 1, '2025-09-27 19:35:29');
+INSERT INTO `pet` VALUES (5, '小鸟', 'http://localhost:1000/file/46ec0ce549867af20b038fbe2e82dff7.png', 5, '123', 2, '2025-10-10 15:00:47');
+INSERT INTO `pet` VALUES (6, '小龟', 'http://localhost:1000/file/c2bbc1b04de790dc79a3f919863a7219.png', 8, '44', 2, '2025-10-10 15:01:33');
+INSERT INTO `pet` VALUES (7, '鸟', 'http://localhost:1000/file/46ec0ce549867af20b038fbe2e82dff7.png', 5, '566', 2, '2025-10-10 15:02:14');
+INSERT INTO `pet` VALUES (8, '小鱼', 'http://localhost:1000/file/57b63c54aa2a25f646ded0c966c37ac1.png', 6, '3423d', 2, '2025-10-10 15:04:09');
+INSERT INTO `pet` VALUES (9, '鱼2', 'http://localhost:1000/file/57b63c54aa2a25f646ded0c966c37ac1.png', 6, '44444', 2, '2025-10-10 15:04:40');
+INSERT INTO `pet` VALUES (10, '小狗', 'http://localhost:1000/file/33640c1826189a8b310a92f9fea1aced.png', 4, NULL, 9, '2025-10-10 15:13:33');
+INSERT INTO `pet` VALUES (11, '狗2', 'http://localhost:1000/file/33640c1826189a8b310a92f9fea1aced.png', 4, NULL, 9, '2025-10-10 15:13:56');
+INSERT INTO `pet` VALUES (12, '狗3', 'http://localhost:1000/file/33640c1826189a8b310a92f9fea1aced.png', 4, NULL, 9, '2025-10-10 15:14:10');
+INSERT INTO `pet` VALUES (13, '兔子', 'http://localhost:1000/file/54b97f27be2966ee6d58225cf42705c9.png', 7, NULL, 9, '2025-10-10 15:14:32');
 
 -- ----------------------------
 -- Table structure for pet_diary
@@ -92,7 +106,7 @@ CREATE TABLE `pet_diary`  (
   `user_id` int NOT NULL COMMENT '用户',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '宠物日记' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '宠物日记' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of pet_diary
@@ -100,6 +114,11 @@ CREATE TABLE `pet_diary`  (
 INSERT INTO `pet_diary` VALUES (3, '1', '1', 1, '2025-09-28 12:57:43');
 INSERT INTO `pet_diary` VALUES (4, '2', '2', 1, '2025-09-28 13:01:18');
 INSERT INTO `pet_diary` VALUES (5, '3', '444332', 1, '2025-09-28 13:05:01');
+INSERT INTO `pet_diary` VALUES (6, '377327', '啊是擦v检查参数', 2, '2025-10-10 14:48:17');
+INSERT INTO `pet_diary` VALUES (7, '393939939', '岸边查查删除v骄傲我的确篮下', 2, '2025-10-10 15:06:07');
+INSERT INTO `pet_diary` VALUES (8, '7372672', '的撒擦擦', 2, '2025-10-10 15:10:37');
+INSERT INTO `pet_diary` VALUES (9, '88888888', '2131241而答案是擦现场', 2, '2025-10-10 15:11:06');
+INSERT INTO `pet_diary` VALUES (10, '3273任', '差别就是cave哦访问非常', 9, '2025-10-10 15:14:50');
 
 -- ----------------------------
 -- Table structure for pet_feed
@@ -188,12 +207,17 @@ CREATE TABLE `pet_type`  (
   `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '备注',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '宠物类型' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '宠物类型' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of pet_type
 -- ----------------------------
-INSERT INTO `pet_type` VALUES (1, '缅因', '大型猫', '2025-09-26 15:57:53');
+INSERT INTO `pet_type` VALUES (1, '猫', '食肉目猫科猫属的脊索动物', '2025-09-26 15:57:53');
+INSERT INTO `pet_type` VALUES (4, '狗', '食肉目犬科犬属哺乳动物', '2025-10-10 14:36:03');
+INSERT INTO `pet_type` VALUES (5, '鸟', '脊椎动物亚门的一纲', '2025-10-10 14:36:59');
+INSERT INTO `pet_type` VALUES (6, '鱼', '最古老的脊椎动物', '2025-10-10 14:38:43');
+INSERT INTO `pet_type` VALUES (7, '兔', '兔形目兔科动物下的一属', '2025-10-10 14:39:43');
+INSERT INTO `pet_type` VALUES (8, '龟', '现存的爬行类中最为特化的一类', '2025-10-10 14:42:08');
 
 -- ----------------------------
 -- Table structure for product
@@ -215,7 +239,7 @@ CREATE TABLE `product`  (
 -- ----------------------------
 -- Records of product
 -- ----------------------------
-INSERT INTO `product` VALUES (1, '化毛膏', 'http://localhost:1000/file/e7e519ce78d211099fcd2243d7397e94.png', '处理毛球', '上架', 9.9, 199, 2, '2025-09-30 18:04:18');
+INSERT INTO `product` VALUES (1, '化毛膏', 'http://localhost:1000/file/e7e519ce78d211099fcd2243d7397e94.png', '处理毛球', '上架', 9.9, 190, 11, '2025-09-30 18:04:18');
 
 -- ----------------------------
 -- Table structure for product_order
@@ -225,6 +249,7 @@ CREATE TABLE `product_order`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'id',
   `product_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '商品名称',
   `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名称',
+  `user_id` int NULL DEFAULT NULL COMMENT '用户ID',
   `price` decimal(10, 2) NOT NULL COMMENT '价格',
   `quantity` int NOT NULL DEFAULT 1 COMMENT '数量',
   `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '状态',
@@ -232,14 +257,17 @@ CREATE TABLE `product_order`  (
   `receiver_phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收货人电话',
   `receiver_address` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收货人地址',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '商品订单表' ROW_FORMAT = DYNAMIC;
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_user_id`(`user_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '商品订单表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of product_order
 -- ----------------------------
-INSERT INTO `product_order` VALUES (1, '化毛膏', '张三', 9.90, 1, '已完成', 'dd', '12345678', '广东省佛山市南海区广东东软学院', '2025-10-01 15:34:05');
-INSERT INTO `product_order` VALUES (2, '化毛膏', '张三', 9.90, 1, '已完成', 'dd', '12345678', '广东省佛山市南海区广东东软学院', '2025-10-01 17:09:17');
+INSERT INTO `product_order` VALUES (1, '化毛膏', '张三', 1, 9.90, 1, '已完成', 'dd', '12345678', '广东省佛山市南海区广东东软学院', '2025-10-01 15:34:05');
+INSERT INTO `product_order` VALUES (2, '化毛膏', '张三', 1, 9.90, 1, '已完成', 'dd', '12345678', '广东省佛山市南海区广东东软学院', '2025-10-01 17:09:17');
+INSERT INTO `product_order` VALUES (3, '化毛膏', '张三', 1, 19.80, 2, '已完成', 'dd', '12345678', '广东省佛山市南海区广东东软学院', '2025-10-10 13:53:15');
+INSERT INTO `product_order` VALUES (4, '化毛膏', '张三', 1, 69.30, 7, '已完成', 'dd', '12345678', '广东省佛山市南海区广东东软学院', '2025-10-10 14:10:45');
 
 -- ----------------------------
 -- Table structure for shipping_address
@@ -282,7 +310,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, '张三', '123456', '1', 'http://localhost:1000/file/8826e8c280cb3bec6a4fbeb61514ee74.png', '213131', '123456@honghua.com', '启用', 80.2, '2025-09-18 13:57:54');
+INSERT INTO `user` VALUES (1, '张三', '123456', '1', 'http://localhost:1000/file/8826e8c280cb3bec6a4fbeb61514ee74.png', '213131', '123456@honghua.com', '启用', 91.1, '2025-09-18 13:57:54');
 INSERT INTO `user` VALUES (2, '李四', '123456', '23', 'http://localhost:1000/file/8826e8c280cb3bec6a4fbeb61514ee74.png', '213131', '123456@honghua.com', '启用', 0, '2025-09-18 15:45:47');
 INSERT INTO `user` VALUES (9, 'hong', 'hong', 'hong', 'http://localhost:1000/file/e7e519ce78d211099fcd2243d7397e94.png', NULL, NULL, '启用', 100, '2025-09-23 14:47:39');
 
