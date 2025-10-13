@@ -121,14 +121,15 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="服务时间" prop="serviceTime" :rules="[{required: true, message: '请选择服务时间'}]">
+        <el-form-item label="服务时间" prop="reservedTime" :rules="feedTimeRules">
           <el-date-picker
-              v-model="feedFormData.serviceTime"
+              v-model="feedFormData.reservedTime"
               type="datetime"
               placeholder="选择服务时间"
               style="width: 100%;"
               value-format="YYYY-MM-DD HH:mm:ss"
               format="YYYY-MM-DD HH:mm:ss"
+              :disabled-date="disabledDate"
           />
         </el-form-item>
 
@@ -162,7 +163,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="寄养开始时间" prop="reservedStartTime" :rules="[{required: true, message: '请选择寄养开始时间'}]">
+        <el-form-item label="寄养开始时间" prop="reservedStartTime" :rules="fosterCareStartTimeRules">
           <el-date-picker
               v-model="fosterCareFormData.reservedStartTime"
               type="datetime"
@@ -170,10 +171,12 @@
               style="width: 100%;"
               value-format="YYYY-MM-DD HH:mm:ss"
               format="YYYY-MM-DD HH:mm:ss"
+              :disabled-date="disabledDate"
+              @change="validateEndTime"
           />
         </el-form-item>
 
-        <el-form-item label="寄养结束时间" prop="reservedEndTime" :rules="[{required: true, message: '请选择寄养结束时间'}]">
+        <el-form-item label="寄养结束时间" prop="reservedEndTime" :rules="fosterCareEndTimeRules">
           <el-date-picker
               v-model="fosterCareFormData.reservedEndTime"
               type="datetime"
@@ -181,6 +184,7 @@
               style="width: 100%;"
               value-format="YYYY-MM-DD HH:mm:ss"
               format="YYYY-MM-DD HH:mm:ss"
+              :disabled-date="getDisabledEndDate"
           />
         </el-form-item>
 
@@ -438,6 +442,41 @@ const feedFormRef = ref()
 const feedDialogOpen = ref(false)
 const feedFormData=ref({})
 
+// 上门喂养时间验证规则
+const feedTimeRules = [
+  { required: true, message: '请选择服务时间', trigger: 'change' },
+  {
+    validator: (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请选择服务时间'));
+        return;
+      }
+
+      const selectedTime = new Date(value);
+      const currentTime = new Date();
+
+      // 设置一个最小间隔（比如1小时后）
+      const minTime = new Date(currentTime.getTime() + 60 * 60 * 1000);
+
+      if (selectedTime < minTime) {
+        callback(new Error('服务时间需要在当前时间1小时后，请重新选择'));
+        return;
+      }
+
+      callback();
+    },
+    trigger: 'change'
+  }
+]
+
+// 禁用过去日期的函数
+function disabledDate(time) {
+  const currentTime = new Date();
+  // 禁用当前时间1小时前的时间
+  const minTime = new Date(currentTime.getTime() - 60 * 60 * 1000);
+  return time.getTime() < minTime.getTime();
+}
+
 function feed(row){
   feedDialogOpen.value=true
   feedFormData.value = {}
@@ -471,6 +510,96 @@ function feedSubmit(){
 const fosterCareFormRef = ref()
 const fosterCareDialogOpen = ref(false)
 const fosterCareFormData = ref({})
+
+// 临时寄养开始时间验证规则
+const fosterCareStartTimeRules = [
+  { required: true, message: '请选择寄养开始时间', trigger: 'change' },
+  {
+    validator: (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请选择寄养开始时间'));
+        return;
+      }
+
+      const selectedTime = new Date(value);
+      const currentTime = new Date();
+      const minTime = new Date(currentTime.getTime() + 60 * 60 * 1000);
+
+      if (selectedTime < minTime) {
+        callback(new Error('寄养开始时间需要在当前时间1小时后，请重新选择'));
+        return;
+      }
+
+      // 检查结束时间是否合理
+      if (fosterCareFormData.value.reservedEndTime) {
+        const endTime = new Date(fosterCareFormData.value.reservedEndTime);
+        if (endTime <= selectedTime) {
+          callback(new Error('寄养开始时间必须早于结束时间'));
+          return;
+        }
+      }
+
+      callback();
+    },
+    trigger: 'change'
+  }
+]
+
+// 临时寄养结束时间验证规则
+const fosterCareEndTimeRules = [
+  { required: true, message: '请选择寄养结束时间', trigger: 'change' },
+  {
+    validator: (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请选择寄养结束时间'));
+        return;
+      }
+
+      const selectedTime = new Date(value);
+
+      if (!fosterCareFormData.value.reservedStartTime) {
+        callback(new Error('请先选择寄养开始时间'));
+        return;
+      }
+
+      const startTime = new Date(fosterCareFormData.value.reservedStartTime);
+
+      if (selectedTime <= startTime) {
+        callback(new Error('寄养结束时间必须晚于开始时间'));
+        return;
+      }
+
+      // 检查寄养时长（最短2小时）
+      const minDuration = 2 * 60 * 60 * 1000; // 2小时
+      if (selectedTime.getTime() - startTime.getTime() < minDuration) {
+        callback(new Error('寄养时长至少需要2小时'));
+        return;
+      }
+
+      callback();
+    },
+    trigger: 'change'
+  }
+]
+
+// 获取结束时间禁用日期函数
+function getDisabledEndDate(time) {
+  if (!fosterCareFormData.value.reservedStartTime) {
+    return time.getTime() < new Date().getTime();
+  }
+
+  const startTime = new Date(fosterCareFormData.value.reservedStartTime);
+  // 结束时间不能早于开始时间
+  return time.getTime() <= startTime.getTime();
+}
+
+// 验证结束时间
+function validateEndTime() {
+  // 当开始时间改变时，重新验证结束时间
+  if (fosterCareFormRef.value && fosterCareFormData.value.reservedEndTime) {
+    fosterCareFormRef.value.validateField('reservedEndTime');
+  }
+}
 
 function fosterCare(row){
   fosterCareDialogOpen.value = true

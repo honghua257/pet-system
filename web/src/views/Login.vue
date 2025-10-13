@@ -69,31 +69,54 @@ const formRef = ref(null);
 const submitForm = () => {
   formRef.value.validate((valid) => {
     if (!valid) {
-
+      return;
     }
+
     http.post("/common/login", formData.value).then(res => {
       if (!res) {
-        return
+        return;
       }
+
       ElMessage({
         message: "登录成功，正在跳转",
         type: "success"
       });
-      console.log(res.data)
+
+      console.log("登录响应:", res.data);
       localStorage.setItem("token", res.data);
+
+      // 获取当前用户信息
       http.get("/common/currentUser").then(res1 => {
+        console.log("当前用户信息:", res1.data);
         let currentUser = res1.data;
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
-        // 使用 nextTick 确保 DOM 更新完成后再跳转
+
+        // 延迟跳转，确保数据存储完成
         setTimeout(() => {
-          if (currentUser.type !== "USER") {
-            router.push({path: "/admin"});
+          if (currentUser.type === "USER") {
+            router.push({path: "/"});
+          } else if (currentUser.type === "ADMIN") {
+            router.push({path: "/admin/home"});
+          } else if (currentUser.type === "PET_STORE_MANAGER") {
+            router.push({path: "/admin/petFeed"});
           } else {
             router.push({path: "/"});
           }
-        }, 100);
-      })
-    })
+        }, 200);
+      }).catch(error => {
+        console.error("获取用户信息失败:", error);
+        ElMessage({
+          message: "获取用户信息失败",
+          type: "error"
+        });
+      });
+    }).catch(error => {
+      console.error("登录失败:", error);
+      ElMessage({
+        message: "登录失败，请检查账号密码",
+        type: "error"
+      });
+    });
   });
 };
 </script>

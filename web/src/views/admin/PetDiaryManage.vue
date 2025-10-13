@@ -17,7 +17,6 @@
         </el-form>
 
         <el-space>
-          <el-button type="success" :icon="Plus" @click="add">新增</el-button>
           <el-button type="danger" :icon="Delete" @click="BatchDelete(null)" :disabled="selectionRows.length <= 0">
             批量删除
           </el-button>
@@ -37,9 +36,8 @@
           <el-table-column property="createTime" label="创建时间" />
 
           <!-- 操作列 -->
-          <el-table-column label="操作" width="200">
+          <el-table-column label="操作" width="120">
             <template #default="scope">
-              <el-button type="success" :icon="Edit" @click="edit(scope.row)">编辑</el-button>
               <el-button type="danger" :icon="Delete" @click="deleteOne(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -60,36 +58,14 @@
       </el-card>
     </el-space>
 
-    <!-- 弹窗 -->
-    <el-dialog v-model="dialogOpen" v-if="dialogOpen" :title="formData.id ? '编辑' : '新增'" width="500">
-      <el-form ref="formRef" :model="formData" label-width="100px">
-        <el-form-item label="标题" prop="title" :rules="[{ required: true, message: '不能为空', trigger: ['blur','change'] }]">
-          <el-input v-model="formData.title" :disabled="formData.id!=null"/>
-        </el-form-item>
-
-        <el-form-item label="内容" prop="content" :rules="[{ required: true, message: '不能为空', trigger: ['blur','change'] }]">
-          <MyEditor :content="formData.content" @content-change="formData.content=$event" v-if="dialogOpen"></MyEditor>
-        </el-form-item>
-
-
-      </el-form>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submit" :icon="Check">提交</el-button>
-          <el-button @click="closeDialog" :icon="Close">取消</el-button>
-        </div>
-      </template>
-    </el-dialog>
-  </div>
+    </div>
 </template>
 
 <script setup>
 import request from "@/utils/http.js"
 import { ref, toRaw } from "vue"
-import { Check, Close, Delete, Edit, Plus, Refresh, Search } from "@element-plus/icons-vue"
+import { Delete, Edit, Refresh, Search } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
-import MyEditor from "@/components/MyEditor.vue";
 
 const searchFromComponents = ref()
 const searchForm = ref({
@@ -132,15 +108,6 @@ function resetSearch() {
   getPageList()
 }
 
-function add() {
-  formData.value = {}
-  dialogOpen.value = true
-}
-
-function edit(row) {
-  formData.value = Object.assign({}, row)
-  dialogOpen.value = true
-}
 
 const selectionRows = ref([])
 
@@ -175,39 +142,4 @@ function deleteOne(row) {
   BatchDelete([row])
 }
 
-const dialogOpen = ref(false)
-const formData = ref({})
-const formRef = ref()
-
-function closeDialog() {
-  dialogOpen.value = false
-}
-
-function submit() {
-  formRef.value.validate((valid) => {
-    if (!valid) {
-      ElMessage({ message: "验证失败，请检查表单", type: "warning" })
-      return
-    }
-    if (!formData.value.id) {
-      request.post("/petDiary/add", formData.value).then(res => {
-        if (!res) {
-          return
-        }
-        dialogOpen.value = false
-        ElMessage({ message: "操作成功", type: "success" })
-        getPageList()
-      })
-    } else {
-      request.put("/petDiary/update", formData.value).then(res => {
-        if (!res) {
-          return
-        }
-        dialogOpen.value = false
-        ElMessage({ message: "操作成功", type: "success" })
-        getPageList()
-      })
-    }
-  })
-}
 </script>

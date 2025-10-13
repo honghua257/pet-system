@@ -41,6 +41,12 @@
             <if test="query.username != null and query.username.trim() != ''">
                 and user.username like concat('%',#{query.username},'%')
             </if>
+            <if test="query.petStoreName != null and query.petStoreName.trim() != ''">
+                and pet_store_manager.store_name like concat('%',#{query.petStoreName},'%')
+            </if>
+            <if test="query.remark != null and query.remark.trim() != ''">
+                and pet_feed.remark like concat('%',#{query.remark},'%')
+            </if>
             <if test="query.status != null and query.status.trim() != ''">
                 and pet_feed.status = #{query.status}
             </if>

@@ -10,7 +10,7 @@
           :default-active="useRoute().path"
           @select="handleMenuSelect"
           router>
-        <el-menu-item index="/admin">
+        <el-menu-item index="/admin" v-if="currentUser.type==='ADMIN'">
           <el-icon>
             <HomeOutlined/>
           </el-icon>
@@ -181,14 +181,20 @@ onMounted(() => {
   setTimeout(() => {
     if (currentUser.value === null) {
       router.push({path: "/login"})
+      return;
     }
-    if (currentUser.value && currentUser.value.type === 'USER') {
+
+    if (currentUser.value.type === 'USER') {
       router.push({path: "/"})
+      return;
     }
-    // 宠物店账号仅可访问“宠物订单”模块，屏蔽宠物商城相关路由
-    if (currentUser.value && currentUser.value.type === 'PET_STORE_MANAGER') {
+
+    // 宠物店账号仅可访问"宠物订单"模块，屏蔽其他功能
+    if (currentUser.value.type === 'PET_STORE_MANAGER') {
       const route = useRoute()
-      const forbiddenForStore = ['/admin/product', '/admin/shippingAddress', '/admin/productOrder']
+      const forbiddenForStore = ['/admin/home', '/admin/admin', '/admin/user', '/admin/petStoreManager',
+                                 '/admin/helpMessage', '/admin/petType', '/admin/pet', '/admin/petDiary',
+                                 '/admin/product', '/admin/shippingAddress', '/admin/productOrder']
       if (forbiddenForStore.some(p => route.path.startsWith(p))) {
         router.push({ path: '/admin/petFeed' })
       }

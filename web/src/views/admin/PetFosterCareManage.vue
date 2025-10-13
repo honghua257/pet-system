@@ -26,7 +26,6 @@
           </el-form-item>
         </el-form>
         <el-space>
-          <el-button type="primary" @click="add" :icon="Plus">新增</el-button>
           <el-button type="danger" :icon="Delete" @click="batchDelete(null)" :disabled="selectionRows.length<=0">
             批量删除
           </el-button>
@@ -64,12 +63,9 @@
               </el-space>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="120">
             <template #default="scope">
-              <el-space :size="8">
-                <el-button size="small" :icon="Edit" @click="edit(scope.$index, scope.row)">编辑</el-button>
-                <el-button size="small" :icon="Delete" type="danger" @click="deleteOne(scope.$index, scope.row)">删除</el-button>
-              </el-space>
+              <el-button size="small" :icon="Delete" type="danger" @click="deleteOne(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -86,46 +82,12 @@
         </div>
       </el-card>
     </el-space>
-    <el-dialog
-        v-model="dialogOpen"
-        v-if="dialogOpen"
-        :title="formData.id?'编辑':'新增'"
-        width="800px"
-    >
-      <el-form ref="formRef" :model="formData" label-width="100px" inline>
-        <el-form-item label="宠物ID" prop="petId" :rules="[{required:true,message:'不能为空',trigger:['blur','change']}]"><el-input v-model="formData.petId" placeholder="宠物ID"></el-input></el-form-item>
-        <el-form-item label="宠物类型ID" prop="petTypeId" :rules="[{required:true,message:'不能为空',trigger:['blur','change']}]"><el-input v-model="formData.petTypeId" placeholder="宠物类型ID"></el-input></el-form-item>
-        <el-form-item label="店长ID" prop="petStoreManagerId" :rules="[{required:true,message:'不能为空',trigger:['blur','change']}]"><el-input v-model="formData.petStoreManagerId" placeholder="店长ID"></el-input></el-form-item>
-        <el-form-item label="预约时间" prop="reservedTime" :rules="[{required:true,message:'不能为空',trigger:['blur','change']}]">
-          <el-date-picker
-              v-model="formData.reservedTime"
-              type="datetime"
-              placeholder="选择预约时间"
-              style="width: 200px;"
-              value-format="YYYY-MM-DD HH:mm:ss"
-              format="YYYY-MM-DD HH:mm:ss"
-          />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark"><el-input v-model="formData.remark" placeholder="备注"></el-input></el-form-item>
-        <el-form-item label="状态" prop="status" :rules="[{required:true,message:'不能为空',trigger:['blur','change']}]">
-          <el-select v-model="formData.status" placeholder="请选择" style="width: 200px">
-            <el-option :label="item.label" :value="item.value" :key="item.value" v-for="item in status"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submit" :icon="Check">提交</el-button>
-          <el-button @click="closeDialog" :icon="Close">取消</el-button>
-        </div>
-      </template>
-    </el-dialog>
-  </div>
+    </div>
 </template>
 
 <script setup>
 import request from "@/utils/http.js";
-import {Check, Close, Delete, Edit, Refresh, Plus, Search} from '@element-plus/icons-vue'
+import {Delete, Refresh, Search} from '@element-plus/icons-vue'
 import {ref, toRaw} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 
@@ -200,76 +162,6 @@ function resetSearch() {
 }
 
 
-const dialogOpen = ref(false);
-const formData = ref({});
-const formRef = ref();
-
-/**
- * 新增
- */
-function add() {
-  dialogOpen.value = true
-  formData.value = {}
-}
-
-/**
- * 编辑
- * @param index
- * @param row
- */
-function edit(index, row) {
-  dialogOpen.value = true
-  formData.value = Object.assign({}, row)
-}
-
-/**
- * 关闭弹框
- */
-function closeDialog() {
-  dialogOpen.value = false
-}
-
-/**
- * 提交数据
- */
-function submit() {
-  //新增
-  formRef.value.validate((valid) => {
-    if (!valid) {
-      ElMessage({
-        message: "验证失败，请检查必填项!",
-        type: 'warning'
-      });
-      return
-    }
-    if (!formData.value.id) {
-      request.post("/petFosterCare/add", formData.value).then(res => {
-        if (!res) {
-          return
-        }
-        dialogOpen.value = false
-        ElMessage({
-          message: res.msg + " 新增用户密码默认为：123456",
-          type: 'success'
-        });
-        getPageList()
-      })
-    } else {
-      //更新
-      request.put("/petFosterCare/update", formData.value).then(res => {
-        if (!res) {
-          return
-        }
-        dialogOpen.value = false
-        ElMessage({
-          message: "操作成功",
-          type: 'success'
-        });
-        getPageList()
-      })
-    }
-  })
-}
 
 
 const selectionRows = ref([]);

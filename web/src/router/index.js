@@ -106,7 +106,7 @@ function getRoutes() {
             path: '/admin',
             name: 'admin',
             component: AdminLayout,
-            redirect: "/admin/home",
+            redirect: '/admin/home', // 默认重定向，路由守卫会根据权限处理
             children: [
                 {
                 path: "home",
@@ -229,6 +229,48 @@ function getRoutes() {
 }
 
 router.beforeEach((to, from, next) => {
+    // 获取当前用户信息
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    // 允许访问的公共页面
+    const publicPages = ['/login', '/register', '/retrievePassword'];
+
+    // 如果没有登录且访问的不是公共页面，跳转到登录页
+    if (!currentUser && !publicPages.includes(to.path)) {
+        next('/login');
+        return;
+    }
+
+    // 如果已登录且访问登录页，跳转到对应的首页
+    if (currentUser && publicPages.includes(to.path)) {
+        if (currentUser.type === 'USER') {
+            next('/');
+        } else if (currentUser.type === 'ADMIN') {
+            next('/admin/home');
+        } else if (currentUser.type === 'PET_STORE_MANAGER') {
+            next('/admin/petFeed');
+        }
+        return;
+    }
+
+    // 宠物店长权限控制
+    if (currentUser && currentUser.type === 'PET_STORE_MANAGER') {
+        const forbiddenRoutes = ['/admin/home', '/admin/admin', '/admin/user', '/admin/petStoreManager',
+                                 '/admin/helpMessage', '/admin/petType', '/admin/pet', '/admin/petDiary',
+                                 '/admin/product', '/admin/shippingAddress', '/admin/productOrder'];
+
+        if (forbiddenRoutes.includes(to.path)) {
+            next('/admin/petFeed'); // 重定向到允许访问的页面
+            return;
+        }
+    }
+
+    // 普通用户不能访问管理后台
+    if (currentUser && currentUser.type === 'USER' && to.path.startsWith('/admin')) {
+        next('/');
+        return;
+    }
+
     next();
 });
 export default router

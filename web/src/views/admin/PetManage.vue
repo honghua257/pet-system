@@ -27,7 +27,6 @@
         </el-form>
 
         <el-space>
-          <el-button type="success" :icon="Plus" @click="add">新增</el-button>
           <el-button type="danger" :icon="Delete" @click="BatchDelete(null)" :disabled="selectionRows.length <= 0">
             批量删除
           </el-button>
@@ -54,9 +53,8 @@
             </template>
           </el-table-column>
           <el-table-column property="createTime" label="创建时间"/>
-          <el-table-column label="操作" width="200">
+          <el-table-column label="操作" width="120">
             <template #default="scope">
-              <el-button type="success" :icon="Edit" @click="edit(scope.row)">编辑</el-button>
               <el-button type="danger" :icon="Delete" @click="deleteOne(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -76,49 +74,14 @@
       </el-card>
     </el-space>
 
-    <!-- 弹窗 -->
-    <el-dialog v-model="dialogOpen" v-if="dialogOpen" :title="formData.id ? '编辑' : '新增'" width="500">
-      <el-form ref="formRef" :model="formData" label-width="100px">
-        <el-form-item label="名称" prop="name" :rules="[{ required: true, message: '不能为空', trigger: ['blur','change'] }]">
-          <el-input v-model="formData.name"/>
-        </el-form-item>
-
-        <el-form-item label="类型" prop="petTypeId" :rules="[{ required: true, message: '不能为空', trigger: ['blur','change'] }]">
-          <el-select v-model="formData.petTypeId" placeholder="请选择" clearable filterable>
-            <el-option
-                v-for="item in petTypeList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="简介" prop="basicInfo">
-          <el-input type="textarea" v-model="formData.basicInfo"/>
-        </el-form-item>
-
-        <el-form-item label="图片" prop="mainImg">
-          <MyUpload type="imageCard" :limit="1" :files="formData.mainImg" @setFiles="formData.mainImg = $event"/>
-        </el-form-item>
-      </el-form>
-
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submit" :icon="Check">提交</el-button>
-          <el-button @click="closeDialog" :icon="Close">取消</el-button>
-        </div>
-      </template>
-    </el-dialog>
-  </div>
+    </div>
 </template>
 
 <script setup>
 import request from "@/utils/http.js"
 import { ref, toRaw } from "vue"
-import { Check, Close, Delete, Edit, Plus, Refresh, Search } from "@element-plus/icons-vue"
+import { Delete, Refresh, Search } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
-import MyUpload from "@/components/MyUpload.vue"
 
 const searchFromComponents = ref()
 const searchForm = ref({
@@ -169,15 +132,6 @@ function resetSearch() {
   getPageList()
 }
 
-function add() {
-  formData.value = {}
-  dialogOpen.value = true
-}
-
-function edit(row) {
-  formData.value = Object.assign({}, row)
-  dialogOpen.value = true
-}
 
 const selectionRows = ref([])
 
@@ -208,35 +162,4 @@ function deleteOne(row) {
   BatchDelete([row])
 }
 
-const dialogOpen = ref(false)
-const formData = ref({})
-const formRef = ref()
-
-function closeDialog() {
-  dialogOpen.value = false
-}
-
-function submit() {
-  formRef.value.validate(valid => {
-    if (!valid) {
-      ElMessage({ message: "验证失败，请检查表单", type: "warning" })
-      return
-    }
-    if (!formData.value.id) {
-      request.post("/pet/add", formData.value).then(res => {
-        if (!res) return
-        dialogOpen.value = false
-        ElMessage({ message: "操作成功", type: "success" })
-        getPageList()
-      })
-    } else {
-      request.put("/pet/update", formData.value).then(res => {
-        if (!res) return
-        dialogOpen.value = false
-        ElMessage({ message: "操作成功", type: "success" })
-        getPageList()
-      })
-    }
-  })
-}
 </script>
