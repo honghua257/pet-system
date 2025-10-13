@@ -5,7 +5,8 @@
 <mapper namespace="com.project.platform.mapper.HelpMessageMapper">
 <!--分页查询-->
     <select id="queryPage" resultType="com.project.platform.entity.HelpMessage">
-        select help_message.*,user.username as username,user.avatar_url as userAvatarUrl
+        select help_message.*,user.username as username,user.avatar_url as userAvatarUrl,
+               IFNULL(help_message.reply_count, 0) as replyCount
         from help_message
         left join user on help_message.user_id=user.id
         <include refid="queryConditions"/>

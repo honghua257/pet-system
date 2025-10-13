@@ -1,71 +1,18 @@
 package com.project.platform.entity;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class HelpMessage {
     private Integer id;
     private String title;
     private String content;
     private Integer userId;
     private LocalDateTime createTime;
+    private Integer replyCount; // 回复数量
+    private String username; // 用户名（从user表关联查询）
+    private String userAvatarUrl; // 用户头像（从user表关联查询）
 
-    //后续联表查询，用户名、用户头像
-    private String username;
-    private String userAvatarUrl;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getUserAvatarUrl() {
-        return userAvatarUrl;
-    }
-
-    public void setUserAvatarUrl(String userAvatarUrl) {
-        this.userAvatarUrl = userAvatarUrl;
-    }
-}
+  }

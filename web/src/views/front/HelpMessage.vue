@@ -50,6 +50,9 @@
                         展开
             </el-button>
             <el-button link type="plan" @click="router.push('/helpMessageDetails/'+item.id)">查看详情</el-button>
+            <el-button link type="info" @click="router.push('/helpMessageDetails/'+item.id)">
+              💬 {{ item.replyCount || 0 }} 条回复
+            </el-button>
             <el-button link type="primary" v-if="userInfo.type === 'USER' && userInfo.id === item.userId"
             @click= "edit(index,item)">编辑
             </el-button>

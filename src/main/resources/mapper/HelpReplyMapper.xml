@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.platform.mapper.HelpReplyMapper">
+
+    <!-- 根据求助ID查询所有回复 -->
+    <select id="selectByHelpId" resultType="com.project.platform.entity.HelpReply">
+        SELECT
+            hr.*,
+            u.username,
+            u.avatar_url as userAvatarUrl
+        FROM help_reply hr
+        LEFT JOIN user u ON hr.user_id = u.id
+        WHERE hr.help_id = #{helpId}
+        ORDER BY hr.create_time ASC
+    </select>
+
+    <!-- 插入回复 -->
+    <insert id="insert" parameterType="com.project.platform.entity.HelpReply" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO help_reply (
+            help_id, user_id, content, parent_id
+        ) VALUES (
+            #{helpId}, #{userId}, #{content}, #{parentId}
+        )
+    </insert>
+
+    <!-- 根据ID删除回复 -->
+    <delete id="deleteById">
+        DELETE FROM help_reply
+        WHERE id = #{id}
+        OR parent_id = #{id}
+    </delete>
+
+    <!-- 根据求助ID删除所有回复 -->
+    <delete id="deleteByHelpId">
+        DELETE FROM help_reply WHERE help_id = #{helpId}
+    </delete>
+
+    <!-- 更新回复 -->
+    <update id="updateById" parameterType="com.project.platform.entity.HelpReply">
+        UPDATE help_reply
+        SET content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 检查用户是否有权限删除该回复 -->
+    <select id="checkReplyPermission" resultType="int">
+        SELECT COUNT(*) FROM help_reply
+        WHERE id = #{id} AND user_id = #{userId}
+    </select>
+
+</mapper>
