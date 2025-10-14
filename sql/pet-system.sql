@@ -11,7 +11,7 @@
  Target Server Version : 80405 (8.4.5)
  File Encoding         : 65001
 
- Date: 11/10/2025 13:00:01
+ Date: 14/10/2025 20:29:14
 */
 
 SET NAMES utf8mb4;
@@ -50,20 +50,48 @@ CREATE TABLE `help_message`  (
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '内容',
   `user_id` int NOT NULL COMMENT '用户',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `reply_count` int NULL DEFAULT 0 COMMENT '回复数量',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '信息求助表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of help_message
 -- ----------------------------
-INSERT INTO `help_message` VALUES (1, '123', '123456', 1, '2025-09-23 18:37:46');
-INSERT INTO `help_message` VALUES (2, '34565432', '15更多v在测序放下你从', 1, '2025-10-01 18:11:27');
-INSERT INTO `help_message` VALUES (3, 'cmnzhcssca', '权威的和帮助下啊擦9啊擦时间为啊u成本', 1, '2025-10-01 18:11:46');
-INSERT INTO `help_message` VALUES (4, '78976', '好好减肥计划', 1, '2025-10-10 00:00:08');
-INSERT INTO `help_message` VALUES (5, '9999', '阿莎v查手机几千万的', 2, '2025-10-10 14:47:26');
-INSERT INTO `help_message` VALUES (6, '7654', '看着不错科比科比支持在线吗额', 2, '2025-10-10 15:06:46');
-INSERT INTO `help_message` VALUES (7, '32544455', '是擦着v大包小包共同特点到', 2, '2025-10-10 15:11:56');
-INSERT INTO `help_message` VALUES (8, '093823热点城市', '吃撒就擦借我点钱从偶像除了', 9, '2025-10-10 15:15:13');
+INSERT INTO `help_message` VALUES (1, '123', '123456', 1, '2025-09-23 18:37:46', 2);
+INSERT INTO `help_message` VALUES (2, '34565432', '15更多v在测序放下你从', 1, '2025-10-01 18:11:27', 1);
+INSERT INTO `help_message` VALUES (3, 'cmnzhcssca', '权威的和帮助下啊擦9啊擦时间为啊u成本', 1, '2025-10-01 18:11:46', 1);
+INSERT INTO `help_message` VALUES (4, '78976', '好好减肥计划', 1, '2025-10-10 00:00:08', 0);
+INSERT INTO `help_message` VALUES (5, '9999', '阿莎v查手机几千万的', 2, '2025-10-10 14:47:26', 0);
+INSERT INTO `help_message` VALUES (6, '7654', '看着不错科比科比支持在线吗额', 2, '2025-10-10 15:06:46', 0);
+INSERT INTO `help_message` VALUES (7, '32544455', '是擦着v大包小包共同特点到', 2, '2025-10-10 15:11:56', 0);
+INSERT INTO `help_message` VALUES (8, '093823热点城市', '吃撒就擦借我点钱从偶像除了', 9, '2025-10-10 15:15:13', 1);
+
+-- ----------------------------
+-- Table structure for help_reply
+-- ----------------------------
+DROP TABLE IF EXISTS `help_reply`;
+CREATE TABLE `help_reply`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `help_id` int NOT NULL COMMENT '求助信息ID',
+  `user_id` int NOT NULL COMMENT '回复用户ID',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '回复内容',
+  `parent_id` int NULL DEFAULT NULL COMMENT '父回复ID(用于嵌套回复)',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_help_id`(`help_id` ASC) USING BTREE,
+  INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
+  INDEX `idx_parent_id`(`parent_id` ASC) USING BTREE,
+  INDEX `idx_create_time`(`create_time` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '求助回复表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of help_reply
+-- ----------------------------
+INSERT INTO `help_reply` VALUES (1, 1, 2, '这个问题我也遇到过，建议你先检查一下宠物的饮食情况', NULL, '2025-10-13 23:43:47');
+INSERT INTO `help_reply` VALUES (2, 2, 1, '可以试试这个方法，我的宠物之前也有类似问题', NULL, '2025-10-13 23:43:47');
+INSERT INTO `help_reply` VALUES (3, 1, 9, '饮食确实很重要，另外还要注意休息', 1, '2025-10-13 23:43:47');
+INSERT INTO `help_reply` VALUES (4, 3, 2, '建议尽快带宠物去医院检查一下', NULL, '2025-10-13 23:43:47');
+INSERT INTO `help_reply` VALUES (6, 8, 1, '12313edesd', NULL, '2025-10-14 00:00:24');
 
 -- ----------------------------
 -- Table structure for pet
@@ -130,12 +158,12 @@ CREATE TABLE `pet_feed`  (
   `pet_type_id` int NOT NULL COMMENT '宠物类型',
   `user_id` int NOT NULL COMMENT '用户',
   `pet_store_manager_id` int NOT NULL COMMENT '店长',
-  `reserved_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '预约时间',
+  `reserved_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '预约时间',
   `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL COMMENT '备注',
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '状态',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '宠物喂养' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '宠物喂养' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of pet_feed
@@ -143,6 +171,8 @@ CREATE TABLE `pet_feed`  (
 INSERT INTO `pet_feed` VALUES (1, 2, 1, 1, 1, '2025-10-01 17:13:30', NULL, '已完成', '2025-09-28 17:18:56');
 INSERT INTO `pet_feed` VALUES (2, 4, 1, 1, 1, '2025-10-01 17:13:29', 'wwww', '已完成', '2025-09-28 18:58:18');
 INSERT INTO `pet_feed` VALUES (4, 4, 1, 1, 1, '2025-10-01 17:13:29', '222', '已完成', '2025-10-01 17:12:38');
+INSERT INTO `pet_feed` VALUES (9, 4, 1, 1, 1, '2025-10-16 00:00:00', NULL, '已下单', '2025-10-12 13:39:33');
+INSERT INTO `pet_feed` VALUES (10, 4, 1, 1, 1, '2025-10-25 00:00:00', NULL, '服务中', '2025-10-12 13:40:11');
 
 -- ----------------------------
 -- Table structure for pet_foster_care
@@ -313,5 +343,18 @@ CREATE TABLE `user`  (
 INSERT INTO `user` VALUES (1, '张三', '123456', '1', 'http://localhost:1000/file/8826e8c280cb3bec6a4fbeb61514ee74.png', '213131', '123456@honghua.com', '启用', 91.1, '2025-09-18 13:57:54');
 INSERT INTO `user` VALUES (2, '李四', '123456', '23', 'http://localhost:1000/file/8826e8c280cb3bec6a4fbeb61514ee74.png', '213131', '123456@honghua.com', '启用', 0, '2025-09-18 15:45:47');
 INSERT INTO `user` VALUES (9, 'hong', 'hong', 'hong', 'http://localhost:1000/file/e7e519ce78d211099fcd2243d7397e94.png', NULL, NULL, '启用', 100, '2025-09-23 14:47:39');
+
+-- ----------------------------
+-- Triggers structure for table help_reply
+-- ----------------------------
+DROP TRIGGER IF EXISTS `update_help_reply_count`;
+delimiter ;;
+CREATE TRIGGER `update_help_reply_count` AFTER INSERT ON `help_reply` FOR EACH ROW BEGIN
+    UPDATE `help_message` SET `reply_count` = (
+        SELECT COUNT(*) FROM `help_reply` WHERE `help_id` = NEW.`help_id`
+    ) WHERE `id` = NEW.`help_id`;
+END
+;;
+delimiter ;
 
 SET FOREIGN_KEY_CHECKS = 1;
