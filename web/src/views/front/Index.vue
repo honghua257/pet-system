@@ -393,7 +393,7 @@ function goToDetails(pathPrefix, id) {
 }
 .help-message-container .el-link:hover,
 .diary-container .el-link:hover {
-  color: #409eff;
+  color: #6f96c3;
   text-decoration: none !important;
   --el-link-hover-text-decoration: none !important;
 }
