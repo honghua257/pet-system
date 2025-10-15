@@ -68,7 +68,7 @@
       <el-form ref="formRef" :model="formData" label-width="100px">
         <el-form-item label="标题" prop="title"
                       :rules="[{required:true,message:'不能为空',trigger:['blur','change']}]">
-          <el-input v-model="formData.title" :disabled="formData.id!=null"></el-input>
+          <el-input v-model="formData.title"></el-input>
         </el-form-item>
         <el-form-item label="内容" prop="content"
                       :rules="[{required:true,message:'不能为空',trigger:['blur','change']}]">

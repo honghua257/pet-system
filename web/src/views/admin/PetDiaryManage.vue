@@ -36,8 +36,9 @@
           <el-table-column property="createTime" label="创建时间" />
 
           <!-- 操作列 -->
-          <el-table-column label="操作" width="120">
+          <el-table-column label="操作" width="200">
             <template #default="scope">
+              <el-button type="success" :icon="Edit" @click="edit(scope.row)">编辑</el-button>
               <el-button type="danger" :icon="Delete" @click="deleteOne(scope.row)">删除</el-button>
             </template>
           </el-table-column>
@@ -59,12 +60,37 @@
     </el-space>
 
     </div>
+
+    <!-- 编辑弹窗 -->
+    <el-dialog
+        v-model="dialogOpen"
+        v-if="dialogOpen"
+        title="编辑宠物日记"
+        width="600">
+      <el-form ref="formRef" :model="formData" label-width="100px">
+        <el-form-item label="标题" prop="title"
+                      :rules="[{required:true,message:'不能为空',trigger:['blur','change']}]">
+          <el-input v-model="formData.title"></el-input>
+        </el-form-item>
+        <el-form-item label="内容" prop="content"
+                      :rules="[{required:true,message:'不能为空',trigger:['blur','change']}]">
+          <el-input v-model="formData.content" type="textarea" :rows="6"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="submit" :icon="Check">提交</el-button>
+          <el-button @click="closeDialog" :icon="Close">取消</el-button>
+        </div>
+      </template>
+    </el-dialog>
 </template>
 
 <script setup>
 import request from "@/utils/http.js"
 import { ref, toRaw } from "vue"
-import { Delete, Edit, Refresh, Search } from "@element-plus/icons-vue"
+import { Delete, Edit, Refresh, Search, Check, Close } from "@element-plus/icons-vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 
 const searchFromComponents = ref()
@@ -140,6 +166,47 @@ function BatchDelete(rows) {
 
 function deleteOne(row) {
   BatchDelete([row])
+}
+
+// 编辑相关变量和函数
+const dialogOpen = ref(false)
+const formData = ref({})
+const formRef = ref()
+
+// 编辑
+function edit(row) {
+  formData.value = Object.assign({}, row)
+  dialogOpen.value = true
+}
+
+// 关闭弹窗
+function closeDialog() {
+  dialogOpen.value = false
+}
+
+// 提交编辑
+function submit() {
+  formRef.value.validate((valid) => {
+    if (!valid) {
+      ElMessage({
+        message: "验证失败，请检查表单",
+        type: "warning"
+      })
+      return
+    }
+
+    request.put("/petDiary/update", formData.value).then(res => {
+      if (!res) {
+        return
+      }
+      dialogOpen.value = false
+      ElMessage({
+        message: "操作成功",
+        type: "success"
+      })
+      getPageList()
+    })
+  })
 }
 
 </script>

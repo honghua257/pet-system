@@ -97,7 +97,7 @@
               </div>
             </template>
             <el-row :gutter="20">
-              <el-col :span="8" v-for="item in products" :key="item.id" class="product-col">
+              <el-col :span="8" v-for="item in products.slice(0, 6)" :key="item.id" class="product-col">
                 <el-card shadow="hover" class="clickable-card" @click="goToDetails('productDetails', item.id)">
                   <div class="product-img-wrapper">
                     <el-image :src="item.mainImg" style="width: 100%; height: 160px;" fit="contain" />
@@ -157,7 +157,7 @@ async function getHomeData(){
     const promises = [
       request.get('/petStoreManager/page', { params: { pageNum: 1, pageSize: 7 }}),
       request.get('/helpMessage/page', { params: { pageNum: 1, pageSize: 7 }}),
-      request.get('/product/page', { params: { pageNum: 1, pageSize: 8 }}),
+      request.get('/product/page', { params: { pageNum: 1, pageSize: 6 }}),
       request.get('/petDiary/page', { params: { pageNum: 1, pageSize: 8 }})
     ]
     const [storesRes, helpRes, productsRes, diariesRes] = await Promise.all(promises)
@@ -296,6 +296,11 @@ function goToDetails(pathPrefix, id) {
 .product-col:nth-child(n + 4) {
   margin-top: 20px;
 }
+
+/* 6个商品时，第三行只需要显示3个 */
+.product-col:nth-child(n + 7) {
+  display: none;
+}
 .product-img-wrapper {
   text-align: center;
   margin-bottom: 8px;
@@ -375,13 +380,8 @@ function goToDetails(pathPrefix, id) {
 .diary-item:hover {
   transform: translateX(4px);
 }
-.el-card[shadow="hover"]:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px var(--shadow-primary) !important;
-  border-color: var(--primary-orange-light);
-}
 
-/* 通用链接样式 */
+/* --- 【优化】合并通用链接样式 --- */
 .help-message-container .el-link,
 .diary-container .el-link {
   text-decoration: none !important;
@@ -393,24 +393,10 @@ function goToDetails(pathPrefix, id) {
 }
 .help-message-container .el-link:hover,
 .diary-container .el-link:hover {
-  color: #6f96c3;
+  color: #409eff; /* 保持Element Plus默认的悬停蓝色 */
   text-decoration: none !important;
   --el-link-hover-text-decoration: none !important;
 }
-.el-timeline {
-  padding-left: 0;
-}
-.el-timeline-item {
-  padding-bottom: 16px;
-}
-.el-timeline-item:last-child {
-  padding-bottom: 0;
-}
-.el-timeline-item__timestamp {
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
 /* 响应式设计 */
 @media (max-width: 1200px) {
   .help-message-container,

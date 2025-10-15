@@ -44,13 +44,12 @@
           <el-table-column property="receiverPhone" label="收货电话" width="120"/>
           <el-table-column property="receiverAddress" label="收货地址" width="200" show-overflow-tooltip/>
           <el-table-column property="createTime" label="创建时间" width="180"/>
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="200">
             <template #default="scope">
-              <el-button type="primary" link :icon="Edit" @click="edit(scope.row)">编辑</el-button>
-              <el-button 
-                v-if="scope.row.status === '待发货'" 
-                type="success" 
-                link 
+              <el-button type="success" :icon="Edit" @click="edit(scope.row)">编辑</el-button>
+              <el-button
+                v-if="scope.row.status === '待发货'"
+                type="warning"
                 @click="ship(scope.row)">
                 发货
               </el-button>

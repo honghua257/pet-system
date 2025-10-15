@@ -38,10 +38,10 @@
           <el-table-column property="stock" label="库存" width="90"/>
           <el-table-column property="salesVolume" label="销量" width="90"/>
           <el-table-column property="createTime" label="创建时间" width="180"/>
-          <el-table-column fixed="right" label="操作" width="150">
+          <el-table-column fixed="right" label="操作" width="200">
             <template #default="scope">
-              <el-button type="primary" link :icon="Edit" @click="edit(scope.row)">编辑</el-button>
-              <el-button type="danger" link :icon="Delete" @click="deleteOne(scope.row)">删除</el-button>
+              <el-button type="success" :icon="Edit" @click="edit(scope.row)">编辑</el-button>
+              <el-button type="danger" :icon="Delete" @click="deleteOne(scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>

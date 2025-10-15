@@ -17,11 +17,11 @@
           </el-form-item>
           <el-form-item label="">
             <el-button type="primary" :icon="Search" @click="search">搜索</el-button>
-            <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
+            <el-button type="info" :icon="RefreshLeft" @click="resetSearch">重置</el-button>
           </el-form-item>
         </el-form>
         <el-space>
-          <el-button type="primary" @click="add" :icon="Plus">新增</el-button>
+          <el-button type="success" @click="add" :icon="Plus">新增</el-button>
           <el-button type="danger" :icon="Delete" @click="batchDelete(null)" :disabled="selectionRows.length<=0">
             批量删除
           </el-button>
@@ -55,12 +55,12 @@
           </el-table-column>
           <el-table-column fixed="right" label="高级操作" width="140">
             <template #default="scope">
-              <el-button type="success" :icon="RefreshLeft" @click="resetPassword( scope.row)">重置密码</el-button>
+              <el-button type="info" :icon="RefreshLeft" @click="resetPassword( scope.row)">重置密码</el-button>
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="200">
             <template #default="scope">
-              <el-button :icon="Edit" @click="edit(scope.$index, scope.row)">编辑</el-button>
+              <el-button type="success" :icon="Edit" @click="edit(scope.$index, scope.row)">编辑</el-button>
               <el-button :icon="Delete" type="danger" @click="deleteOne(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
