@@ -1,7 +1,7 @@
 <template>
   <el-container class="admin-wrapper" style="height: 100%;">
     <el-aside width="200px" class="my-aside">
-      <h3 class="title">管理系统</h3>
+      <h3 class="title">宠物综合管理平台</h3>
       <el-menu
           style="width: 100%; overflow: hidden;"
           active-text-color="#409EFF"

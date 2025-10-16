@@ -54,8 +54,12 @@
               <span v-else>{{ scope.row.status }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="160"></el-table-column>
-          <el-table-column fixed="right" label="高级操作" width="110">
+          <el-table-column prop="createTime" label="创建时间" width="160">
+            <template #default="scope">
+              <div class="time-column">{{ scope.row.createTime }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" label="高级操作" width="110" class-name="advanced-operations-col">
             <template #default="scope">
               <el-space>
                 <el-button size="small" type="primary" @click="inService(scope.row)" v-if="scope.row.status==='PENDING' || scope.row.status==='已下单'">接单</el-button>
@@ -82,7 +86,7 @@
         </div>
       </el-card>
     </el-space>
-    </div>
+  </div>
 </template>
 
 <script setup>
@@ -96,11 +100,8 @@ const tableComponents = ref();
 
 const listData = ref([]);
 const pageInfo = ref({
-  //当前页
   pageNum: 1,
-  //分页大小
   pageSize: 10,
-  //总条数
   total: 0
 });
 const searchForm = ref({});
@@ -113,9 +114,6 @@ const status = ref([
 
 getPageList()
 
-/**
- * 获取分页数据
- */
 function getPageList() {
   let data = Object.assign(toRaw(searchForm.value), toRaw(pageInfo.value))
   request.get("/petFeed/page", {
@@ -126,67 +124,37 @@ function getPageList() {
   })
 }
 
-/**
- * 选择分页
- * @param e
- */
 function currentChange(e) {
   pageInfo.value.pageNum = e
   getPageList()
 }
 
-/**
- * 改变分页数量
- * @param e
- */
 function sizeChange(e) {
   pageInfo.value.pageSize = e
   getPageList()
   console.log(e)
 }
 
-/**
- * 搜索
- */
 function search() {
   pageInfo.value.pageNum = 1
   getPageList()
 }
 
-/**
- * 重置搜索框
- */
 function resetSearch() {
   searchFormComponents.value.resetFields();
   getPageList()
 }
 
-
-
-
 const selectionRows = ref([]);
 
-/**
- * 多选
- * @param rows
- */
 function selectionChange(rows) {
   selectionRows.value = rows
 }
 
-/**
- * 单个删除
- * @param index
- * @param row
- */
 function deleteOne(index, row) {
   batchDelete([row])
 }
 
-/**
- * 批量删除
- * @param rows
- */
 function batchDelete(rows) {
   if (!rows) {
     rows = selectionRows.value;
@@ -207,7 +175,6 @@ function batchDelete(rows) {
         type: 'success'
       });
       getPageList()
-
     })
   }).catch(() => {
     ElMessage({
@@ -218,7 +185,6 @@ function batchDelete(rows) {
   });
 }
 
-// 接单
 function inService(row){
   request.put(`/petFeed/inService/${row.id}`).then(res=>{
     if(!res){return}
@@ -227,7 +193,6 @@ function inService(row){
   })
 }
 
-// 完成
 function finish(row){
   request.put(`/petFeed/finish/${row.id}`).then(res=>{
     if(!res){return}
@@ -235,13 +200,25 @@ function finish(row){
     getPageList();
   })
 }
-
-
 </script>
 
 <style scoped>
-.status-col .cell {
-  overflow: visible !important;
-  text-overflow: clip !important;
+
+.time-column {
+  position: relative;
+  padding-right: 12px;
+}
+
+/* --- 【主要修改区域】 --- */
+/* 高级操作列样式 - 通过为td元素添加左边框来实现分隔线 */
+:deep(.advanced-operations-col) {
+  /* 使用 ::v-deep 或者 :deep() 穿透scoped样式 */
+  /* #DCDFE6 是Element Plus标准的边框颜色，比 #EBEEF5 更清晰 */
+  border-left: 1px solid #DCDFE6 !important;
+}
+
+/* 表格行悬停时的高级操作列背景色 */
+.el-table__body tr:hover .advanced-operations-col .cell {
+  background-color: #F5F7FA;
 }
 </style>
