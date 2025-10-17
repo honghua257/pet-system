@@ -5,7 +5,8 @@
 <mapper namespace="com.project.platform.mapper.PetDiaryMapper">
 <!--分页查询-->
     <select id="queryPage" resultType="com.project.platform.entity.PetDiary">
-        select pet_diary.*,user.username as username,user.avatar_url as userAvatarUrl
+        select pet_diary.*,user.username as username,user.avatar_url as userAvatarUrl,
+        COALESCE(pet_diary.reply_count, 0) as replyCount
         from pet_diary
         left join user on pet_diary.user_id=user.id
         <include refid="queryConditions"/>
@@ -69,4 +70,19 @@
             #{id}
         </foreach>
     </delete>
+
+<!--查询所有数据-->
+    <select id="list" resultType="com.project.platform.entity.PetDiary">
+        select pet_diary.*, COALESCE(pet_diary.reply_count, 0) as replyCount
+        from pet_diary
+        order by pet_diary.id desc
+    </select>
+
+<!--根据id查询-->
+    <select id="selectById" resultType="com.project.platform.entity.PetDiary">
+        select pet_diary.*, COALESCE(pet_diary.reply_count, 0) as replyCount
+        from pet_diary
+        where pet_diary.id = #{id}
+    </select>
+
 </mapper>

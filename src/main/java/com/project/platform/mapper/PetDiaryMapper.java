@@ -9,7 +9,6 @@ import java.util.Map;
 
 public interface PetDiaryMapper {
     //查询pet_diary_type表所有数据
-    @Select("select * from pet_diary")
     List<PetDiary> list();
 
     //添加用户
@@ -26,7 +25,6 @@ public interface PetDiaryMapper {
     int queryCount(@Param("query") Map<String, Object> query);
 
     //根据id查询用户
-    @Select("select * from pet_diary where id = #{id}")
     PetDiary selectById(Integer id);
 
 

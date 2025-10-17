@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.platform.mapper.PetDiaryReplyMapper">
+
+    <!-- 根据日记ID查询所有评论 -->
+    <select id="selectByDiaryId" resultType="com.project.platform.entity.PetDiaryReply">
+        SELECT
+            pdr.*,
+            u.username,
+            u.avatar_url as userAvatarUrl
+        FROM pet_diary_reply pdr
+        LEFT JOIN user u ON pdr.user_id = u.id
+        WHERE pdr.diary_id = #{diaryId}
+        ORDER BY pdr.create_time ASC
+    </select>
+
+    <!-- 插入评论 -->
+    <insert id="insert" parameterType="com.project.platform.entity.PetDiaryReply" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pet_diary_reply (
+            diary_id, user_id, content, parent_id
+        ) VALUES (
+            #{diaryId}, #{userId}, #{content}, #{parentId}
+        )
+    </insert>
+
+    <!-- 根据ID删除评论 -->
+    <delete id="deleteById">
+        DELETE FROM pet_diary_reply
+        WHERE id = #{id}
+        OR parent_id = #{id}
+    </delete>
+
+    <!-- 根据日记ID删除所有评论 -->
+    <delete id="deleteByDiaryId">
+        DELETE FROM pet_diary_reply WHERE diary_id = #{diaryId}
+    </delete>
+
+    <!-- 更新评论 -->
+    <update id="updateById" parameterType="com.project.platform.entity.PetDiaryReply">
+        UPDATE pet_diary_reply
+        SET content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 检查用户是否有权限删除该评论 -->
+    <select id="checkReplyPermission" resultType="int">
+        SELECT COUNT(*) FROM pet_diary_reply
+        WHERE id = #{id} AND user_id = #{userId}
+    </select>
+
+    <!-- 更新日记评论数量 -->
+    <update id="updateDiaryReplyCount">
+        UPDATE pet_diary
+        SET reply_count = reply_count + #{count}
+        WHERE id = #{diaryId}
+    </update>
+
+</mapper>

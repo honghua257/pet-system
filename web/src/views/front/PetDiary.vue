@@ -48,6 +48,9 @@
                         展开
             </el-button>
             <el-button link type="plan" @click="goToDetails(item.id)">查看详情</el-button>
+            <el-button link type="info" @click="goToDetails(item.id)">
+              💬 {{ item.replyCount || 0 }} 条评论
+            </el-button>
             <el-button link type="primary" v-if="userInfo.type === 'USER' && userInfo.id === item.userId"
             @click= "edit(index,item)">编辑
             </el-button>

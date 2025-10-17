@@ -12,4 +12,5 @@ public class PetDiary {
     private String username;
     private String userAvatarUrl;
     private LocalDateTime createTime;
+    private Integer replyCount; // 评论数量
 }

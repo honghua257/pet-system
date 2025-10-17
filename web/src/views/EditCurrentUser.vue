@@ -27,8 +27,8 @@
           <el-input type="text"
                     v-model="formData.nickname"
                     auto-complete="off"
-                    placeholder="用户名"
-                    :disabled="true"
+                    placeholder="请输入昵称"
+                    clearable
           ></el-input>
         </el-form-item>
         <el-form-item prop="email" label="邮箱">
@@ -36,6 +36,7 @@
               v-model="formData.email"
               auto-complete="off"
               placeholder="邮箱"
+              clearable
           ></el-input>
         </el-form-item>
         <el-form-item prop="tel" label="电话">
@@ -43,6 +44,7 @@
                     v-model="formData.tel"
                     auto-complete="off"
                     placeholder="电话"
+                    clearable
           ></el-input>
         </el-form-item>
         <el-form-item label="店铺名称" prop="storeName"
